@@ -2,13 +2,13 @@
 
 WBS_LIST=(8388608 16777216 33554432)      # 8MB, 16MB, 32MB
 TRIGGER_LIST=(4 8 16)
-RESULT_DIR="./results/kakao"
+RESULT_DIR="/mnt/newdisk/results/kakao"
 mkdir -p $RESULT_DIR
 
 for WBS in "${WBS_LIST[@]}"; do
   for TR in "${TRIGGER_LIST[@]}"; do
     ../db_bench \
-      --db=/tmp/kakao_wbs${WBS}_tr${TR} \
+      --db=/mnt/newdisk/tmp/kakao_wbs${WBS}_tr${TR} \
       --benchmarks=fillrandom,readlatest \
       --num=500000 \
       --value_size=100 \

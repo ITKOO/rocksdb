@@ -2,13 +2,13 @@
 
 WBS_LIST=(16777216 33554432 67108864)      # 16MB, 32MB, 64MB
 TRIGGER_LIST=(4 8 16)
-RESULT_DIR="./results/youtube"
+RESULT_DIR="/mnt/newdisk/results/youtube"
 mkdir -p $RESULT_DIR
 
 for WBS in "${WBS_LIST[@]}"; do
   for TR in "${TRIGGER_LIST[@]}"; do
     ../db_bench \
-      --db=/tmp/youtube_wbs${WBS}_tr${TR} \
+      --db=/mnt/newdisk/tmp/youtube_wbs${WBS}_tr${TR} \
       --benchmarks=fillseq,readseq \
       --num=10000 \
       --value_size=1048576 \

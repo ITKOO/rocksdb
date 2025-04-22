@@ -2,13 +2,13 @@
 
 WBS_LIST=(16777216 33554432 67108864)
 TRIGGER_LIST=(4 8 16)
-RESULT_DIR="./results/tiktok"
+RESULT_DIR="/mnt/newdisk/results/tiktok"
 mkdir -p $RESULT_DIR
 
 for WBS in "${WBS_LIST[@]}"; do
   for TR in "${TRIGGER_LIST[@]}"; do
     ../db_bench \
-      --db=/tmp/tiktok_wbs${WBS}_tr${TR} \
+      --db=/mnt/newdisk/tmp/tiktok_wbs${WBS}_tr${TR} \
       --benchmarks=fillrandom,readwhilewriting \
       --num=20000 \
       --value_size=256000 \
