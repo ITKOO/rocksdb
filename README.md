@@ -1,29 +1,70 @@
-## RocksDB: A Persistent Key-Value Store for Flash and RAM Storage
+# RocksDB Workload-specific Write Performance Benchmarking
+This project benchmarks and optimizes write performance in RocksDB  
+by tuning Write Buffer Size (WBS) and Compaction Trigger (TR) for different workloads.  
 
-[![CircleCI Status](https://circleci.com/gh/facebook/rocksdb.svg?style=svg)](https://circleci.com/gh/facebook/rocksdb)
+## Overview
 
-RocksDB is developed and maintained by Facebook Database Engineering Team.
-It is built on earlier work on [LevelDB](https://github.com/google/leveldb) by Sanjay Ghemawat (sanjay@google.com)
-and Jeff Dean (jeff@google.com)
+This study aims to optimize **write performance** in RocksDB  
+by tuning **Write Buffer Size (WBS)** and **Compaction Trigger (TR)**  
+across three different workloads:
 
-This code is a library that forms the core building block for a fast
-key-value server, especially suited for storing data on flash drives.
-It has a Log-Structured-Merge-Database (LSM) design with flexible tradeoffs
-between Write-Amplification-Factor (WAF), Read-Amplification-Factor (RAF)
-and Space-Amplification-Factor (SAF). It has multi-threaded compactions,
-making it especially suitable for storing multiple terabytes of data in a
-single database.
+- **Feed Cache Storage** (Mixed Read/Write)
+- **Action Logs** (Write-heavy)
+- **Message State Storage** (Write-heavy with occasional reads)
 
-Start with example usage here: https://github.com/facebook/rocksdb/tree/main/examples
+## Benchmark Setup
 
-See the [github wiki](https://github.com/facebook/rocksdb/wiki) for more explanation.
+- **Instance**: EC2 c5ad.4xlarge (16 vCPU, 32 GiB Memory, AMD EPYC 2nd Gen)
+- **OS**: Ubuntu 20.04 LTS
+- **RocksDB Version**: (ex: 8.8.0)
+- **Storage**: EBS gp3 (Started with 30 GiB, extended to 100 GiB)
+- **Benchmark Tool**: RocksDB `db_bench`
 
-The public interface is in `include/`.  Callers should not include or
-rely on the details of any other header files in this package.  Those
-internal APIs may be changed without warning.
+## Workloads & Configurations
 
-Questions and discussions are welcome on the [RocksDB Developers Public](https://www.facebook.com/groups/rocksdb.dev/) Facebook group and [email list](https://groups.google.com/g/rocksdb) on Google Groups.
+| Workload              | Data Size  | Benchmark Mode           | Description                          |
+|-----------------------|------------|--------------------------|--------------------------------------|
+| Feed Cache Storage    | 4KB        | fillrandom, readwhilewriting | Mixed read/write cache workload     |
+| Action Logs           | 512B       | fillrandom               | Append-only, write-heavy workload   |
+| Message State Storage | 1KB        | fillrandom, readwhilewriting | Write-heavy with occasional reads   |
 
-## License
+- **Parameters Tuned**:
+  - **Write Buffer Size (WBS)**: 16MB, 32MB, 64MB
+  - **Compaction Trigger (TR)**: 4, 8, 16
+ 
+## Results Summary
 
-RocksDB is dual-licensed under both the GPLv2 (found in the COPYING file in the root directory) and Apache 2.0 License (found in the LICENSE.Apache file in the root directory).  You may select, at your option, one of the above-listed licenses.
+<p align="left">
+  <img src="https://github.com/user-attachments/assets/b4fb9406-bb54-40df-a89e-2e8534b3d1c4" width="30%">
+  <img src="https://github.com/user-attachments/assets/86c935e7-1872-4994-aa05-a7b38f4106e9" width="30%">
+  <img src="https://github.com/user-attachments/assets/853c80ed-889f-4c7c-b9bd-46a796c02e75" width="30%">
+</p>
+
+
+| Workload              | Baseline (WBS 32MB, TR 4) | Optimal Config      | Write Performance Gain |
+|-----------------------|---------------------------|---------------------|------------------------|
+| Feed Cache Storage    | 66,070 ops/sec            | 76,721 ops/sec (WBS 64MB, TR 4) | **16% ↑** |
+| Action Logs           | 144,088 ops/sec           | 146,179 ops/sec (WBS 16MB, TR 8) | **1% ↑**  |
+| Message State Storage | 128,984 ops/sec           | 129,627 ops/sec (WBS 64MB, TR 4) | **~0% ↑** |
+
+- **Feed Cache**: Write performance improved by **16%**, read latency also significantly reduced.
+- **Action Logs & Message State**: Minor write performance change, but read latency improvements observed.
+
+## Key Findings
+
+- **Workload-specific tuning** is crucial for RocksDB performance.
+- **Feed Cache Storage** benefited from larger WBS and frequent compaction (TR 4).
+- **Write-heavy workloads** (Logs, Message State) showed limited write improvements but significant read gains with tuning.
+
+## Future Work
+
+- Test additional parameters (e.g., WAL settings, Compaction styles).
+- Simulate real-world workloads using YCSB.
+- Explore adaptive tuning mechanisms for RocksDB based on workload patterns.
+
+## Contributors
+
+- [jiwonkoo](https://github.com/ITKOO) 
+- [blueoxygens](https://github.com/blueoxygens)
+- [windylung](https://github.com/windylung)
+
