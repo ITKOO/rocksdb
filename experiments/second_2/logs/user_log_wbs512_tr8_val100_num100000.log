@@ -1,0 +1,28 @@
+============================================================
+실행 중: NUM=100000, VALUE_SIZE=100, WBS=512MB, TR=8
+DB: /home/itkoo/rocksdb/experiments/second_2/result_2/wbs512_tr8_val100_num100000
+Set seed to 1747121805534664 because --seed was 0
+Initializing RocksDB Options from the specified file
+Initializing RocksDB Options from command-line flags
+Integrated BlobDB: blob cache disabled
+Keys:       16 bytes each (+ 0 bytes user-defined timestamp)
+Values:     100 bytes each (50 bytes after compression)
+Entries:    100000
+Prefix:    0 bytes
+Keys per prefix:    0
+RawSize:    11.1 MB (estimated)
+FileSize:   6.3 MB (estimated)
+Write rate: 0 bytes/second
+Read rate: 0 ops/second
+Compression: Snappy
+Compression sampling rate: 0
+Memtablerep: SkipListFactory
+Perf Level: 1
+WARNING: Assertions are enabled; benchmarks unnecessarily slow
+------------------------------------------------
+Initializing RocksDB Options from the specified file
+Initializing RocksDB Options from command-line flags
+Integrated BlobDB: blob cache disabled
+DB path: [/home/itkoo/rocksdb/experiments/second_2/result_2/wbs512_tr8_val100_num100000]
+fillseq      :      24.270 micros/op 164720 ops/sec 2.428 seconds 400000 operations;   18.2 MB/s
+
