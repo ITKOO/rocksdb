@@ -1,0 +1,31 @@
+DB: home/itkoo/rocksdb/experiments/result/wbs4_tr4_num100000
+Set seed to 1746579018991510 because --seed was 0
+Initializing RocksDB Options from the specified file
+Initializing RocksDB Options from command-line flags
+Integrated BlobDB: blob cache disabled
+Keys:       16 bytes each (+ 0 bytes user-defined timestamp)
+Values:     200 bytes each (100 bytes after compression)
+Entries:    100000
+Prefix:    0 bytes
+Keys per prefix:    0
+RawSize:    20.6 MB (estimated)
+FileSize:   11.1 MB (estimated)
+Write rate: 0 bytes/second
+Read rate: 0 ops/second
+Compression: Snappy
+Compression sampling rate: 0
+Memtablerep: SkipListFactory
+Perf Level: 1
+WARNING: Assertions are enabled; benchmarks unnecessarily slow
+------------------------------------------------
+Initializing RocksDB Options from the specified file
+Initializing RocksDB Options from command-line flags
+Integrated BlobDB: blob cache disabled
+DB path: [home/itkoo/rocksdb/experiments/result/wbs4_tr4_num100000]
+fillrandom   :       5.138 micros/op 777954 ops/sec 0.514 seconds 400000 operations;  160.3 MB/s
+DB path: [home/itkoo/rocksdb/experiments/result/wbs4_tr4_num100000]
+seekrandomwhilewriting :      16.890 micros/op 235749 ops/sec 1.697 seconds 400000 operations; (99831 of 100000 found)
+
+DB path: [home/itkoo/rocksdb/experiments/result/wbs4_tr4_num100000]
+readrandomwriterandom :       3.672 micros/op 1082362 ops/sec 0.370 seconds 400000 operations; ( reads:90000 writes:10000 total:100000 found:90000)
+
